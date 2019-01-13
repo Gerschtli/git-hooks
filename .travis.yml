@@ -1,0 +1,43 @@
+sudo: required
+language: rust
+cache: cargo
+
+matrix:
+  include:
+    - rust: nightly
+      before_script:
+        - rustup component add clippy-preview || cargo install --git https://github.com/rust-lang/rust-clippy/ --force clippy
+        - rustup component add rustfmt-preview || cargo install --git https://github.com/rust-lang/rustfmt/ --force rustfmt-nightly
+    - rust: beta
+    - rust: stable
+    - rust: 1.27.0 # current stable version in nixpkgs
+
+    - language: nix
+      name: nix build on nixpkgs-unstable
+      before_script:
+        - nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs
+        - nix-channel --update
+        - nix eval nixpkgs.rustc.version
+      script:
+        - nix build --verbose
+    - language: nix
+      name: nix build on nixos-18.09
+      before_script:
+        - nix-channel --add https://nixos.org/channels/nixos-18.09 nixpkgs
+        - nix-channel --update
+        - nix eval nixpkgs.rustc.version
+      script:
+        - nix build --verbose
+
+script:
+  - |
+    if [[ "${TRAVIS_RUST_VERSION}" == "nightly" ]]; then
+      cargo fmt -- --verbose --check
+    fi
+  - cargo check --verbose
+  - cargo build --verbose
+  - |
+    if [[ "${TRAVIS_RUST_VERSION}" == "nightly" ]]; then
+      cargo clippy --verbose
+    fi
+  - cargo test --verbose
