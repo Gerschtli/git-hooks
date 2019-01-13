@@ -1,4 +1,5 @@
 use error::*;
+use hooks::command;
 use std::path::PathBuf;
 use wrapper::config;
 
@@ -45,4 +46,4 @@ macro_rules! settings {
     }
 }
 
-settings!();
+settings!(command);

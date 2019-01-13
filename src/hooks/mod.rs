@@ -1,3 +1,5 @@
+pub(super) mod command;
+
 use error::*;
 use settings;
 
@@ -34,4 +36,4 @@ macro_rules! handler {
     }
 }
 
-handler!();
+handler!(command);
