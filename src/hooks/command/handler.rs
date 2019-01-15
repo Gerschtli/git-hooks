@@ -1,6 +1,7 @@
 use super::ConfigEntry;
 use error::*;
 use hooks;
+use wrapper::process;
 
 pub(in hooks) struct Handler {
     config: ConfigEntry,
@@ -14,10 +15,19 @@ impl Handler {
 
 impl hooks::Handler for Handler {
     fn pre_push(&self) -> Result<bool> {
-        for x in &self.config.pre_push {
-            println!("executing {}", x);
+        let mut success = true;
+        for c in &self.config.pre_push {
+            println!("run {}", c);
+            let exit_status = process::Command::new("sh", &["-c", c]).run()?;
+
+            if exit_status.success() {
+                println!("success: {}", c);
+            } else {
+                println!("failed: {}", c);
+                success = false;
+            }
         }
 
-        Ok(true)
+        Ok(success)
     }
 }
