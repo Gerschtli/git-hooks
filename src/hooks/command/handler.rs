@@ -13,11 +13,11 @@ impl Handler {
 }
 
 impl hooks::Handler for Handler {
-    fn pre_push(&self) -> Result<()> {
+    fn pre_push(&self) -> Result<bool> {
         for x in &self.config.pre_push {
             println!("executing {}", x);
         }
 
-        Ok(())
+        Ok(true)
     }
 }

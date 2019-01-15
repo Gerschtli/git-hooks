@@ -47,14 +47,16 @@ pub mod hooks;
 mod settings;
 mod wrapper;
 
+use error::*;
 use std::env;
+use std::process;
 
 pub use error::Result;
 pub use hooks::Hook;
 
-pub fn run_hook(hook: Hook) -> Result<()> {
     let home_path = dirs::home_dir().unwrap();
     let git_root_path = env::current_dir().unwrap();
+fn run_handler(hook: Hook) -> Result<bool> {
 
     let config = settings::Settings::init(home_path, git_root_path)?;
 
@@ -63,11 +65,30 @@ pub fn run_hook(hook: Hook) -> Result<()> {
     println!("hook: {:#?}", &hook);
     println!("config: {:#?}", &config);
 
+    let mut success = true;
     for handler in handler_list {
-        if let Err(err) = handler.run(&hook) {
-            return Err(err);
+        if !handler.run(&hook)? {
+            success = false;
         }
     }
 
-    Ok(())
+    Ok(success)
+}
+
+pub fn run_hook(hook: Hook) {
+    process::exit(match run_handler(hook) {
+        Ok(true) => {
+            println!("Hook executed successfully!");
+            0
+        },
+        Ok(false) => {
+            println!("Checks in hook failed!");
+            2
+        },
+        Err(err) => {
+            println!("An error occured!");
+            println!("{:#?}", err);
+            1
+        },
+    });
 }

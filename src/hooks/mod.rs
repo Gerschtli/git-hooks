@@ -4,11 +4,11 @@ use error::*;
 use settings;
 
 pub(super) trait Handler {
-    fn pre_push(&self) -> Result<()> {
-        Ok(())
+    fn pre_push(&self) -> Result<bool> {
+        Ok(true)
     }
 
-    fn run(&self, hook: &Hook) -> Result<()> {
+    fn run(&self, hook: &Hook) -> Result<bool> {
         match hook {
             Hook::PrePush => self.pre_push(),
         }
