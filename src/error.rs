@@ -1,12 +1,11 @@
 use std::io;
 use wrapper::config;
 
-pub use std::result::Result as StdResult;
-pub type Result<T> = StdResult<T, Error>;
+use std::result::Result as StdResult;
+pub(crate) type Result<T> = StdResult<T, Error>;
 
 #[derive(Debug)]
-pub enum Error {
-    HookFailed,
+pub(crate) enum Error {
     General(String),
     InvalidConfig(String, Box<config::ConfigError>),
     IoConfig(String, io::Error),

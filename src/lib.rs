@@ -42,7 +42,7 @@ extern crate serde;
 #[macro_use]
 extern crate serde_derive;
 
-pub mod error;
+mod error;
 pub mod hooks;
 mod settings;
 mod wrapper;
@@ -51,7 +51,6 @@ use error::*;
 use std::env;
 use std::process;
 
-pub use error::Result;
 pub use hooks::Hook;
 
     let home_path = dirs::home_dir().unwrap();
