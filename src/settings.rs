@@ -5,10 +5,6 @@ use wrapper::config;
 
 pub(crate) trait ConfigType {
     fn set_default(_: &mut config::Config) -> Result<()>;
-
-    fn set_values(_: &mut config::Config) -> Result<()> {
-        Ok(())
-    }
 }
 
 macro_rules! settings {
@@ -35,10 +31,6 @@ macro_rules! settings {
                 git_root_path.push(".git-hooks.toml");
                 config.set_path(home_path)?;
                 config.set_path(git_root_path)?;
-
-                $(
-                    $mod::ConfigEntry::set_values(&mut config)?;
-                )*
 
                 config.try_into()
             }
