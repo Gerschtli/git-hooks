@@ -48,14 +48,14 @@ mod settings;
 mod wrapper;
 
 use error::*;
-use std::env;
 use std::process;
+use wrapper::directory;
 
 pub use hooks::Hook;
 
 fn run_handler(hook: Hook) -> Result<bool> {
-    let home_path = dirs::home_dir().wrap_error("failed to get home directory")?;
-    let git_root_path = env::current_dir().wrap_error("failed to get git root directory")?;
+    let home_path = directory::home()?;
+    let git_root_path = directory::current()?;
 
     let config = settings::Settings::init(home_path, git_root_path)?;
     let handler_list = hooks::build(&config);
