@@ -19,7 +19,11 @@ impl Command {
         Self { command }
     }
 
-    pub(crate) fn run(mut self) -> Result<process::ExitStatus> {
-        self.command.status().wrap_error("failed to start process")
+    pub(crate) fn run(mut self) -> Result<bool> {
+        Ok(self
+            .command
+            .status()
+            .wrap_error("failed to start process")?
+            .success())
     }
 }

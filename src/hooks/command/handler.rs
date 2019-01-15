@@ -18,9 +18,9 @@ impl hooks::Handler for Handler {
         let mut success = true;
         for c in &self.config.pre_push {
             println!("run {}", c);
-            let exit_status = process::Command::new("sh", &["-c", c]).run()?;
+            let result = process::Command::new("sh", &["-c", c]).run()?;
 
-            if exit_status.success() {
+            if result {
                 println!("success: {}", c);
             } else {
                 println!("failed: {}", c);
