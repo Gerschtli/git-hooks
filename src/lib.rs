@@ -58,11 +58,7 @@ pub use hooks::Hook;
 fn run_handler(hook: Hook) -> Result<bool> {
 
     let config = settings::Settings::init(home_path, git_root_path)?;
-
     let handler_list = hooks::build(&config);
-
-    println!("hook: {:#?}", &hook);
-    println!("config: {:#?}", &config);
 
     let mut success = true;
     for handler in handler_list {
