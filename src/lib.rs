@@ -48,8 +48,8 @@ mod settings;
 mod wrapper;
 
 use error::*;
-use std::process;
 use wrapper::directory;
+use wrapper::process;
 
 pub use hooks::Hook;
 

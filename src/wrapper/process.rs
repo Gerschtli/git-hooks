@@ -1,6 +1,10 @@
 use error::*;
 use std::process;
 
+pub(crate) fn exit(code: i32) {
+    process::exit(code);
+}
+
 pub(crate) struct Command {
     command: process::Command,
 }
