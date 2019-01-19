@@ -17,19 +17,14 @@ macro_rules! settings {
         }
 
         impl Settings {
-            pub(crate) fn init(
-                mut home_path: PathBuf,
-                mut git_root_path: PathBuf
-            ) -> Result<Self> {
+            pub(crate) fn init(mut git_root_path: PathBuf) -> Result<Self> {
                 let mut config = config::Config::new();
 
                 $(
                     $mod::ConfigEntry::set_default(&mut config)?;
                 )*
 
-                home_path.push(".git-hooks.toml");
                 git_root_path.push(".git-hooks.toml");
-                config.set_path(home_path)?;
                 config.set_path(git_root_path)?;
 
                 config.try_into()

@@ -57,10 +57,9 @@ use wrapper::process;
 pub use hooks::Hook;
 
 fn run_handler(hook: Hook) -> Result<bool> {
-    let home_path = directory::home()?;
     let git_root_path = directory::current()?;
 
-    let config = settings::Settings::init(home_path, git_root_path)?;
+    let config = settings::Settings::init(git_root_path)?;
     let handler_list = hooks::build(&config);
 
     let mut success = true;
