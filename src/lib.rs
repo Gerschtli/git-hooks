@@ -38,6 +38,9 @@
 
 extern crate config;
 extern crate dirs;
+#[cfg(test)]
+#[macro_use]
+extern crate hamcrest2;
 extern crate serde;
 #[macro_use]
 extern crate serde_derive;

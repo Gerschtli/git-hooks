@@ -43,3 +43,128 @@ impl<T> WrapErrorExt<T> for Option<T> {
         self.ok_or_else(|| Error::General(message.into()))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use hamcrest2::prelude::*;
+
+    mod wrap_error_ext {
+        use super::*;
+
+        mod result_with_config_error {
+            use super::*;
+
+            #[test]
+            fn when_ok() {
+                let result: StdResult<u32, config::ConfigError> = Ok(42);
+                let wrapped = result.wrap_error("message");
+
+                // TODO: comment in after https://github.com/Valloric/hamcrest2-rust/pull/6
+                // assert_that!(wrapped, is(ok()));
+                assert_that!(wrapped.unwrap(), is(equal_to(42)));
+            }
+
+            #[test]
+            fn when_err() {
+                let result: StdResult<u32, _> = Err(config::ConfigError::NotFound("x".to_owned()));
+                let wrapped = result.wrap_error("message");
+
+                // TODO: comment in after https://github.com/Valloric/hamcrest2-rust/pull/6
+                // assert_that!(wrapped, is(err()));
+                let error = if let Err(ref err) = wrapped {
+                    err
+                } else {
+                    unreachable!();
+                };
+
+                match error {
+                    Error::InvalidConfig(message, err) => {
+                        assert_that!(message, is(equal_to("message")));
+                        assert_that!(
+                            format!("{:?}", err),
+                            is(equal_to("configuration property \"x\" not found"))
+                        );
+                    },
+                    _ => assert!(false, "wrong error type"),
+                }
+            }
+        }
+
+        mod result_with_io_error {
+            use super::*;
+
+            #[test]
+            fn when_ok() {
+                let result: StdResult<u32, io::Error> = Ok(42);
+                let wrapped = result.wrap_error("message");
+
+                // TODO: comment in after https://github.com/Valloric/hamcrest2-rust/pull/6
+                // assert_that!(wrapped, is(ok()));
+                assert_that!(wrapped.unwrap(), is(equal_to(42)));
+            }
+
+            #[test]
+            fn when_err() {
+                let result: StdResult<u32, _> = Err(io::Error::new(io::ErrorKind::NotFound, "x"));
+                let wrapped = result.wrap_error("message");
+
+                // TODO: comment in after https://github.com/Valloric/hamcrest2-rust/pull/6
+                // assert_that!(wrapped, is(err()));
+                let error = if let Err(ref err) = wrapped {
+                    err
+                } else {
+                    unreachable!();
+                };
+
+                match error {
+                    Error::IoConfig(message, err) => {
+                        assert_that!(message, is(equal_to("message")));
+                        assert_that!(
+                            format!("{:?}", err),
+                            is(equal_to(
+                                "Custom { kind: NotFound, error: StringError(\"x\") }"
+                            ))
+                        );
+                    },
+                    _ => assert!(false, "wrong error type"),
+                }
+            }
+        }
+
+        mod option {
+            use super::*;
+
+            #[test]
+            fn when_ok() {
+                let option = Some(42);
+                let wrapped = option.wrap_error("message");
+
+                // TODO: comment in after https://github.com/Valloric/hamcrest2-rust/pull/6
+                // assert_that!(wrapped, is(ok()));
+                assert_that!(wrapped.unwrap(), is(equal_to(42)));
+            }
+
+            #[test]
+            fn when_err() {
+                let option: Option<u32> = None;
+                let wrapped = option.wrap_error("message");
+
+                // TODO: comment in after https://github.com/Valloric/hamcrest2-rust/pull/6
+                // assert_that!(wrapped, is(err()));
+                let error = if let Err(ref err) = wrapped {
+                    err
+                } else {
+                    unreachable!();
+                };
+
+                match error {
+                    Error::General(message) => {
+                        assert_that!(message, is(equal_to("message")));
+                    },
+                    _ => assert!(false, "wrong error type"),
+                }
+            }
+        }
+    }
+}
