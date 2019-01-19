@@ -75,6 +75,7 @@ mod tests {
                 let error = if let Err(ref err) = wrapped {
                     err
                 } else {
+                    #[cfg_attr(tarpaulin, skip)]
                     unreachable!();
                 };
 
@@ -86,6 +87,7 @@ mod tests {
                             is(equal_to("configuration property \"x\" not found"))
                         );
                     },
+                    #[cfg_attr(tarpaulin, skip)]
                     _ => assert!(false, "wrong error type"),
                 }
             }
@@ -114,6 +116,7 @@ mod tests {
                 let error = if let Err(ref err) = wrapped {
                     err
                 } else {
+                    #[cfg_attr(tarpaulin, skip)]
                     unreachable!();
                 };
 
@@ -127,6 +130,7 @@ mod tests {
                             ))
                         );
                     },
+                    #[cfg_attr(tarpaulin, skip)]
                     _ => assert!(false, "wrong error type"),
                 }
             }
@@ -155,6 +159,7 @@ mod tests {
                 let error = if let Err(ref err) = wrapped {
                     err
                 } else {
+                    #[cfg_attr(tarpaulin, skip)]
                     unreachable!();
                 };
 
@@ -162,6 +167,7 @@ mod tests {
                     Error::General(message) => {
                         assert_that!(message, is(equal_to("message")));
                     },
+                    #[cfg_attr(tarpaulin, skip)]
                     _ => assert!(false, "wrong error type"),
                 }
             }
