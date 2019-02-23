@@ -1,0 +1,36 @@
+cargo:
+  enabled: true
+  features: rust-1-31 mocking
+
+command:
+  enabled: true
+  pre-push:
+    - command: ./test.sh
+      files: *.yml
+
+commit-message:
+  enabled: true
+  branch_pattern: ^([A-Z]+)-([0-9]+)-.*$
+  replacement: [$1-$2]
+  search: BRANCHNAME
+
+composer:
+  enabled: true
+  test-command: verify
+
+file:
+  enabled: true
+  max-line-length: 120
+
+git-lfs:
+  enabled: true
+
+maven:
+  enabled: true
+
+npm:
+  enabled: true
+  test-command: test
+
+python:
+  enabled: true
