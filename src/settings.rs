@@ -12,6 +12,7 @@ macro_rules! settings {
         #[derive(Clone, Debug, Deserialize)]
         pub(crate) struct Settings {
             $(
+                #[serde(default = "command::ConfigEntry::default")]
                 pub(crate) $mod: $mod::ConfigEntry,
             )*
         }
